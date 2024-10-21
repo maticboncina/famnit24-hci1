@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AffectText</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #cameraFeed {
+            width: 640px;
+            height: 480px;
+            background-color: #000;
+            margin-bottom: 10px;
+            display: block;
+            border: 1px solid black;
+        }
+        .container {
+            display: flex;
+            flex-direction: row;
+        }
+        .emoji-display-box {
+            font-size: 50px;
+            margin: 10px;
+            padding: 20px;
+            width: 100px;
+            height: 100px;
+            border: 2px solid black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .bar-container {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+        }
+        .bar-container span {
+            width: 80px;
+            display: inline-block;
+            text-align: right;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        .bar {
+            height: 20px;
+            width: 0;
+            background-color: green;
+            transition: width 0.5s ease;
+        }
+        .bar-wrapper {
+            width: 300px;
+            height: 20px;
+            border: 1px solid black;
+            background-color: #ddd;
+        }
+        #joyBar {
+            background-color: #FFD700; /* Gold for joy */
+        }
+        #sadnessBar {
+            background-color: #1E90FF; /* DodgerBlue for sadness */
+        }
+        #disgustBar {
+            background-color: #32CD32; /* LimeGreen for disgust */
+        }
+        #angerBar {
+            background-color: #FF4500; /* OrangeRed for anger */
+        }
+        #fearBar {
+            background-color: #8B008B; /* DarkMagenta for fear */
+        }
+        button {
+            margin: 5px;
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .buttons-container {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>AffectText</h1>
+
+    <div id="cameraFeed"></div>
+
+    <div class="container">
+        <!-- Emoji Display Box -->
+        <div class="emoji-display-box" id="emojiBox">empty</div>
+
+        <!-- Emotion Bars -->
+        <div>
+            <div class="bar-container">
+                <span>JOY</span>
+                <div class="bar-wrapper">
+                    <div class="bar" id="joyBar"></div>
+                </div>
+            </div>
+
+            <div class="bar-container">
+                <span>SADNESS</span>
+                <div class="bar-wrapper">
+                    <div class="bar" id="sadnessBar"></div>
+                </div>
+            </div>
+
+            <div class="bar-container">
+                <span>DISGUST</span>
+                <div class="bar-wrapper">
+                    <div class="bar" id="disgustBar"></div>
+                </div>
+            </div>
+
+            <div class="bar-container">
+                <span>ANGER</span>
+                <div class="bar-wrapper">
+                    <div class="bar" id="angerBar"></div>
+                </div>
+            </div>
+
+            <div class="bar-container">
+                <span>FEAR</span>
+                <div class="bar-wrapper">
+                    <div class="bar" id="fearBar"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="buttons-container">
+        <button onclick="fillBar('joyBar')">Fill JOY to 80%</button>
+        <button onclick="fillBar('sadnessBar')">Fill SADNESS to 80%</button>
+        <button onclick="fillBar('disgustBar')">Fill DISGUST to 80%</button>
+        <button onclick="fillBar('angerBar')">Fill ANGER to 80%</button>
+        <button onclick="fillBar('fearBar')">Fill FEAR to 80%</button>
+    </div>
+
+    <script>
+        // Access the webcam and display it in the cameraFeed div
+        const videoElement = document.createElement('video');
+        const cameraFeed = document.getElementById('cameraFeed');
+
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                videoElement.srcObject = stream;
+                videoElement.play();
+                cameraFeed.appendChild(videoElement);
+            })
+            .catch(err => {
+                console.error("Error accessing camera: " + err);
+                cameraFeed.textContent = "Camera access denied";
+            });
+
+        // Function to fill the selected bar to 80%, reset others to 0%, and update the emoji box
+        function fillBar(selectedBarId) {
+            const bars = ['joyBar', 'sadnessBar', 'disgustBar', 'angerBar', 'fearBar'];
+            const emojiBox = document.getElementById('emojiBox');
+
+            bars.forEach(barId => {
+                const bar = document.getElementById(barId);
+                if (barId === selectedBarId) {
+                    bar.style.width = '80%'; // Fill selected bar to 80%
+                    switch (selectedBarId) {
+                        case 'joyBar':
+                            emojiBox.textContent = '😊'; // Joy emoji
+                            break;
+                        case 'sadnessBar':
+                            emojiBox.textContent = '😢'; // Sadness emoji
+                            break;
+                        case 'disgustBar':
+                            emojiBox.textContent = '🤢'; // Disgust emoji
+                            break;
+                        case 'angerBar':
+                            emojiBox.textContent = '😡'; // Anger emoji
+                            break;
+                        case 'fearBar':
+                            emojiBox.textContent = '😨'; // Fear emoji
+                            break;
+                    }
+                } else {
+                    bar.style.width = '0%';  // Reset all others to 0%
+                }
+            });
+        }
+
+        // Listen for keypress events and trigger the corresponding emotion bar fill
+        document.addEventListener('keydown', function(event) {
+            switch(event.key) {
+                case '1':
+                    fillBar('joyBar');
+                    break;
+                case '2':
+                    fillBar('sadnessBar');
+                    break;
+                case '3':
+                    fillBar('disgustBar');
+                    break;
+                case '4':
+                    fillBar('angerBar');
+                    break;
+                case '5':
+                    fillBar('fearBar');
+                    break;
+            }
+        });
+    </script>
+</body>
+</html>
+    wx“

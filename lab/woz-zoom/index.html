@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Interface Prototype</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+        #screen {
+            width: 300px;
+            height: 400px;
+            margin: 50px auto;
+            background-color: #fff;
+            border: 2px solid black;
+            position: relative;
+        }
+        #person {
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 100px;
+            background-color: lightblue;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 100px;
+        }
+        #bubble {
+            position: absolute;
+            top: 160px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px;
+            background-color: lightgray;
+            border-radius: 10px;
+            display: inline-block;
+        }
+        #status {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Voice Interface Prototype</h1>
+    <div id="screen">
+        <div id="person">ME</div>
+        <div id="bubble">Hello, how can I help?</div>
+        <div id="status">Waiting...</div>
+    </div>
+
+    <script>
+        let clickCount = 0;
+        const bubble = document.getElementById('bubble');
+        const status = document.getElementById('status');
+        const person = document.getElementById('person');
+
+        document.getElementById('screen').addEventListener('click', function() {
+            clickCount++;
+
+            if (clickCount === 1) {
+                // Start Meeting
+                bubble.innerHTML = "Starting Meeting...";
+                status.innerHTML = "Meeting in progress";
+                person.style.backgroundColor = "lightgreen";
+            } else if (clickCount === 2) {
+                // Increase Volume
+                bubble.innerHTML = "Increasing Volume...";
+                status.innerHTML = "Volume Up";
+                person.style.backgroundColor = "yellow";
+            } else if (clickCount === 3) {
+                // Decrease Volume
+                bubble.innerHTML = "Decreasing Volume...";
+                status.innerHTML = "Volume Down";
+                person.style.backgroundColor = "orange";
+            } else if (clickCount === 4) {
+                // End Call
+                bubble.innerHTML = "Ending Call...";
+                status.innerHTML = "Call Ended";
+                person.style.backgroundColor = "lightcoral";
+                clickCount = 0; // Reset to allow restart
+            }
+        });
+    </script>
+</body>
+</html>
