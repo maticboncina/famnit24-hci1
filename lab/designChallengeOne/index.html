@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello Nana Interface</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+        }
+        .container {
+            width: 90vw;
+            max-width: 800px;
+            border: 2px solid #333;
+            padding: 20px;
+            background-color: white;
+            display: grid;
+            grid-template-columns: 3fr 1fr;
+            gap: 20px;
+            box-sizing: border-box;
+        }
+        .app-title {
+            grid-column: span 2;
+            text-align: center;
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .tv-screen {
+            border: 2px solid #666;
+            padding: 20px;
+            height: 400px;
+            position: relative;
+            background-color: #e0e0e0;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .mirror-box {
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+            overflow: hidden;
+            background-color: black;
+        }
+        .mirror-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .join-code-display {
+            font-size: 1.5em;
+            color: #ffffff;
+            position: absolute;
+            top: 10px;
+            font-weight: bold;
+        }
+        .remote {
+            border: 2px solid #666;
+            padding: 10px;
+            height: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+        }
+        .button {
+            width: 50px;
+            height: 50px;
+            background-color: #ddd;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5em;
+            border: 1px solid #333;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .power-button {
+            color: white;
+            font-weight: bold;
+        }
+        .ok-button {
+            background-color: #4caf50;
+            color: white;
+            font-weight: bold;
+            width: 80px;
+        }
+        .color-buttons {
+            display: flex;
+            gap: 5px;
+        }
+        .color-button {
+            width: 40px;
+            height: 30px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1em;
+            color: white;
+            cursor: pointer;
+        }
+        .red-button { background-color: red; }
+        .green-button { background-color: green; }
+        .yellow-button { background-color: yellow; color: black; }
+        .blue-button { background-color: blue; }
+
+        .volume-buttons {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+        .volume-label {
+            font-size: 0.9em;
+        }
+        .message-box {
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            padding: 10px;
+            background-color: #eee;
+            border: 1px solid #aaa;
+            margin-top: 10px;
+            min-height: 30px;
+        }
+        .footer {
+            grid-column: span 2;
+            text-align: center;
+            font-size: 1em;
+            padding: 10px;
+            color: #555;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .secure-icon {
+            margin-left: 5px;
+            font-size: 1.2em;
+            color: #4caf50;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="app-title">Hello Nana</div>
+    
+    <div class="tv-screen">
+        <br>
+        <br>
+        <div class="join-code-display" id="joinCodeDisplay" style="color: black;">Enter 6-digit code to join</div>
+        <div class="mirror-box">
+            <video id="mirrorVideo" autoplay muted class="mirror-video hidden"></video>
+        </div>
+    </div>
+    
+    <div class="remote">
+        <h2>Remote</h2>
+        <!-- Power Button -->
+        <div class="button power-button" id="powerButton" onclick="togglePower()" style="background-color: red;">Power</div>
+        
+        <!-- Number pad -->
+        <div class="button-grid">
+            <div class="button" onclick="enterDigit(1)">1</div>
+            <div class="button" onclick="enterDigit(2)">2</div>
+            <div class="button" onclick="enterDigit(3)">3</div>
+            <div class="button" onclick="enterDigit(4)">4</div>
+            <div class="button" onclick="enterDigit(5)">5</div>
+            <div class="button" onclick="enterDigit(6)">6</div>
+            <div class="button" onclick="enterDigit(7)">7</div>
+            <div class="button" onclick="enterDigit(8)">8</div>
+            <div class="button" onclick="enterDigit(9)">9</div>
+        </div>
+        
+        <!-- Color buttons for Cancel (Red) and other color buttons (non-functional) -->
+        <div class="color-buttons">
+            <div class="color-button red-button" onclick="resetCode()">Red</div>
+            <div class="color-button green-button">Green</div>
+            <div class="color-button yellow-button">Yellow</div>
+            <div class="color-button blue-button">Blue</div>
+        </div>
+
+        <!-- OK Button for confirming the code -->
+        <div class="button ok-button" onclick="confirmJoin()">OK</div>
+
+        <!-- Volume Control -->
+        <div class="volume-buttons">
+            <span class="volume-label">Volume</span>
+            <div class="button" onclick="adjustVolume(0.1)">+</div>
+            <div class="button" onclick="adjustVolume(-0.1)">-</div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <span>Secure</span>
+        <span class="secure-icon">🔒</span>
+    </div>
+</div>
+
+<script>
+    const videoElement = document.getElementById('mirrorVideo');
+    const messageBox = document.getElementById('joinCodeDisplay');
+    const powerButton = document.getElementById('powerButton');
+    let isCallActive = false;
+    let joinCode = "";
+    const requiredCodeLength = 6;
+
+    async function startWebcam() {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            videoElement.srcObject = stream;
+            videoElement.classList.remove("hidden");
+        } catch (error) {
+            console.error("Error accessing the webcam: ", error);
+        }
+    }
+
+    function stopWebcam() {
+        if (videoElement.srcObject) {
+            videoElement.srcObject.getTracks().forEach(track => track.stop());
+            videoElement.srcObject = null;
+            videoElement.classList.add("hidden");
+        }
+    }
+
+    function togglePower() {
+        if (isCallActive) {
+            endCall();
+        } else if (joinCode.length === requiredCodeLength) {
+            startCall();
+        } else {
+            messageBox.textContent = "Enter 6-digit code to join";
+        }
+    }
+
+    function enterDigit(digit) {
+        if (!isCallActive && joinCode.length < requiredCodeLength) {
+            joinCode += digit;
+            messageBox.textContent = `Code: ${joinCode}`;
+        }
+    }
+
+    function resetCode() {
+        joinCode = "";
+        messageBox.textContent = "Enter 6-digit code to join";
+    }
+
+    function confirmJoin() {
+        if (joinCode.length === requiredCodeLength) {
+            startCall();
+        }
+    }
+
+    function startCall() {
+        isCallActive = true;
+        startWebcam();
+        messageBox.textContent = "Call in progress";
+        powerButton.style.backgroundColor = "green";
+    }
+
+    function endCall() {
+        isCallActive = false;
+        stopWebcam();
+        resetCode();
+        messageBox.textContent = "Power Off";
+        powerButton.style.backgroundColor = "red";
+    }
+
+    function adjustVolume(change) {
+        if (isCallActive) {
+            let newVolume = videoElement.volume + change;
+            newVolume = Math.min(Math.max(newVolume, 0), 1);
+            videoElement.volume = newVolume;
+            messageBox.textContent = `Volume: ${(newVolume * 100).toFixed(0)}%`;
+        }
+    }
+</script>
+
+</body>
+</html>
